@@ -1,7 +1,5 @@
 package com.duo.book;
 
-import org.hibernate.annotations.Table;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,7 +9,7 @@ import javax.persistence.Id;
 public class Book {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private Long id;
     private String titel;
     private String uitgever;
