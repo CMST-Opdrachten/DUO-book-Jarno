@@ -1,9 +1,6 @@
 package com.duo.book;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +26,9 @@ public class BookController {
         return repository.findById(id);
     }
 
-
-
+    @PostMapping("/api/boeken")
+    public Book addBook(@RequestBody Book newBook)
+    {
+       return repository.save(newBook);
+    }
 }
