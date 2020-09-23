@@ -1,5 +1,6 @@
 package com.duo.book;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,6 +9,7 @@ public class RestBookApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(RestBookApplication.class, args);
+
     }
 
 }
