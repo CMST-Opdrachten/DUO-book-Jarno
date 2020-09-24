@@ -1,0 +1,7 @@
+<changeSet id="01" author="hhimanshu">
+<insert tableName="books">
+    <column name="id" valueNumeric="1"/>
+    <column name="titel" value="een titel"/>
+    <column name="uitgever" valueNumeric="de uitgever"/>
+</insert>
+</changeSet>

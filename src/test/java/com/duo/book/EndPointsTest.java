@@ -6,6 +6,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static io.restassured.RestAssured.*;
@@ -13,6 +14,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
+@ActiveProfiles("integration-test")
 public class EndPointsTest {
 
     @Autowired
@@ -21,6 +23,7 @@ public class EndPointsTest {
     @Test
     public void addTestData()
     {
+
         repository.save(new Book("test1", "uitgever"));
         repository.save(new Book("test2", "uitgever"));
     }

@@ -42,7 +42,6 @@ public class BookController {
     {
         return repository.findById(id)
                 .map(book -> {
-                    newBook.setId(id);
                     book.setTitel(newBook.getTitel());
                     book.setUitgever(newBook.getUitgever());
                     return repository.save(book);
