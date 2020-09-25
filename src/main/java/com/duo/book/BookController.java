@@ -9,6 +9,7 @@ import java.util.Optional;
 public class BookController {
 
     private BookRepository repository;
+    public Book noBook;
 
     BookController(BookRepository repository)
     {

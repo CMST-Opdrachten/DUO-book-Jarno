@@ -70,9 +70,10 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>3.4.1</version>
                 <configuration>
-                    <driver>org.hsqldb.jdbc.JDBCDriver</driver>
-                    <url>jdbc:hsqldb:hsql://localhost:9001/testdb</url>
-                    <username>sa</username>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql://localhost:5432/Books</url>
+                    <username>postgres</username>
+                    <password>Welkom123</password>
                     <changeLogFile>db/liquibase-changelog.xml</changeLogFile>
                 </configuration>
             </plugin>
