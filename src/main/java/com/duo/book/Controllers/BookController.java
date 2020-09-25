@@ -4,6 +4,8 @@ import com.duo.book.Objects.Book;
 import com.duo.book.Repositories.BookRepository;
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -17,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 public class BookController {
@@ -73,19 +76,45 @@ public class BookController {
         repository.deleteById(id);
     }
 
+    //Get all books and makes a pdf of the data in a table
     @GetMapping("api/boeken/pdf")
-    public void createPDF() throws IOException, DocumentException {
-
+    public void createPDF() throws IOException, DocumentException
+    {
 
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
 
         document.open();
-        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-        Chunk chunk = new Chunk(repository.findAll().get(0).toString(), font);
+        PdfPTable table = new PdfPTable(3);
+        addTableHeader(table);
+        addRows(table);
 
-        document.add(chunk);
+        document.add(table);
         document.close();
 
+    }
+
+    //Creates the header titels for the pdf table
+    private void addTableHeader(PdfPTable table)
+    {
+        Stream.of("id", "titel", "uitgever")
+                .forEach(columnTitle -> {
+                    PdfPCell header = new PdfPCell();
+                    header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                    header.setBorderWidth(1);
+                    header.setPhrase(new Phrase(columnTitle));
+                    table.addCell(header);
+                });
+    }
+
+    //Adds the data to the table
+    private void addRows(PdfPTable table)
+    {
+        for(int i = 0; i < (repository.findAll().size()); i++  )
+        {
+            table.addCell(repository.findAll().get(i).getId().toString());
+            table.addCell(repository.findAll().get(i).getTitel());
+            table.addCell(repository.findAll().get(i).getUitgever());
+        }
     }
 }
