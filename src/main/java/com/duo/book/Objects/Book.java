@@ -46,4 +46,9 @@ public class Book {
     public void setUitgever(String uitgever) {
         this.uitgever = uitgever;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" + "id=" + this.id + ", titel='" + this.titel + '\'' + ", uitgever='" + this.uitgever + '\'' + '}';
+    }
 }
