@@ -1,5 +1,7 @@
-package com.duo.book;
+package com.duo.book.Controllers;
 
+import com.duo.book.Objects.Book;
+import com.duo.book.Repositories.BookRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

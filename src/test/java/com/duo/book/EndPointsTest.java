@@ -1,5 +1,7 @@
 package com.duo.book;
 
+import com.duo.book.Objects.Book;
+import com.duo.book.Repositories.BookRepository;
 import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
 import org.junit.*;
