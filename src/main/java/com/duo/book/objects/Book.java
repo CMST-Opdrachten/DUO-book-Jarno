@@ -1,4 +1,4 @@
-package com.duo.book.Objects;
+package com.duo.book.objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

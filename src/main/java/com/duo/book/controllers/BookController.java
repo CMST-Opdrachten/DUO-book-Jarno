@@ -1,22 +1,18 @@
-package com.duo.book.Controllers;
+package com.duo.book.controllers;
 
-import com.duo.book.Objects.Book;
-import com.duo.book.Repositories.BookRepository;
+import com.duo.book.objects.Book;
+import com.duo.book.repositories.BookRepository;
 import com.itextpdf.text.*;
-import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-import java.io.FileNotFoundException;
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -25,7 +21,8 @@ import java.util.stream.Stream;
 public class BookController {
 
     private BookRepository repository;
-    public Book noBook;
+    private static String filepath = "src\\pdfFiles\\";
+    private static String filename = "BooksPdf";
 
     BookController(BookRepository repository)
     {
@@ -77,13 +74,20 @@ public class BookController {
     }
 
     //Get all books and makes a pdf of the data in a table
-    @GetMapping("api/boeken/pdf")
-    public void createPDF() throws IOException, DocumentException
+    @GetMapping("/getBookPdf")
+    public void createPDF(HttpServletResponse response) throws IOException, DocumentException
     {
+        response.setContentType("application/pdf");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename =" + filename+ ".pdf";
+        response.setHeader(headerKey,headerValue);
+
+        String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
-
+        PdfWriter.getInstance(document, new FileOutputStream(filepath + filename+ "-" + timeStamp + ".pdf"));
+        PdfWriter.getInstance(document, response.getOutputStream());
+        
         document.open();
         PdfPTable table = new PdfPTable(3);
         addTableHeader(table);
