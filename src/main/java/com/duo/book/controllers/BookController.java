@@ -121,4 +121,11 @@ public class BookController {
             table.addCell(repository.findAll().get(i).getUitgever());
         }
     }
+
+    @GetMapping("/io")
+    public String io() throws InterruptedException {
+        long sleepDuration = 200L + (long) (500L * Math.random());
+        Thread.sleep(sleepDuration);
+        return "done after " + sleepDuration + "ms";
+    }
 }
