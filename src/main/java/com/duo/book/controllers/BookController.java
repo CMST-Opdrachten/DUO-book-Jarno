@@ -1,5 +1,6 @@
 package com.duo.book.controllers;
 
+import com.duo.book.BookNotFoundExceptoin;
 import com.duo.book.objects.Book;
 import com.duo.book.repositories.BookRepository;
 import com.itextpdf.text.*;
@@ -14,13 +15,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @RestController
 public class BookController {
 
-    private BookRepository repository;
+    public BookRepository repository;
+
     private static String filepath = "src\\pdfFiles\\";
     private static String filename = "BooksPdf";
 
@@ -38,9 +39,8 @@ public class BookController {
 
     //get single book by id
     @GetMapping("/api/boeken/{id}")
-    public Optional<Book> findBookByID(@PathVariable Long id)
-    {
-        return repository.findById(id);
+    public Book findBookByID(@PathVariable Long id)  {
+        return repository.findById(id).orElseThrow(() -> new BookNotFoundExceptoin(id));
     }
 
     //add new book

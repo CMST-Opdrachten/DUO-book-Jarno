@@ -1,6 +1,7 @@
 package com.duo.book;
 
 import com.duo.book.objects.Book;
+import com.duo.book.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,17 +17,29 @@ import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
 import javax.jms.ConnectionFactory;
+import java.util.List;
 
 @SpringBootApplication
 @EnableJms
 public class RestBookApplication
 {
+
+    private static BookRepository repository;
+
+    RestBookApplication(BookRepository repository)
+    {
+        this.repository = repository;
+    }
+
     public static void main(String[] args)
     {
         ConfigurableApplicationContext context = (SpringApplication.run(RestBookApplication.class, args));
         JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
-
-        jmsTemplate.convertAndSend("kast", new Book("testtitel","testuitgever"));
+        System.out.println("Sending Books");
+        for(int i = 0; i <= getBooks().size()-1 ; i++)
+        {
+            jmsTemplate.convertAndSend("kast", getBooks().get(i));
+        }
     }
 
     @Bean
@@ -45,5 +58,11 @@ public class RestBookApplication
         converter.setTypeIdPropertyName("_type");
         return converter;
     }
+
+    public static List<Book> getBooks()
+    {
+        return repository.findAll();
+    }
+
 
 }

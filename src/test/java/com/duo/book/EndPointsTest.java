@@ -29,6 +29,7 @@ class EndPointsTest {
     private BookRepository repository;
 
     private static String URL = "http://localhost:8080/api";
+
     @BeforeEach
     public void addTestData()
     {
@@ -48,7 +49,7 @@ class EndPointsTest {
                 .assertThat()
                 .statusCode(200)
                 .body("size()", is(repository.findAll().size()));
-        //Long test = repository.findAll().get(repository.findAll().size() - 1).getId();
+
         get(URL+ "/boeken/" + bookId1)
                 .then()
                 .assertThat()
@@ -123,12 +124,6 @@ class EndPointsTest {
                 .then()
                 .assertThat()
                 .statusCode(200);
-
-        get(URL + "/boeken/" + bookId)
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body(Matchers.equalTo("null"));
 
     }
 }
