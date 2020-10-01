@@ -15,62 +15,60 @@ class PerformanceTest extends Simulation {
     .baseUrl("http://localhost:8080")
 
   val scn: ScenarioBuilder = scenario("PerformanceSimulation")
-    .repeat(10, "count")
+    .repeat(1, "count")
     {
       exec(
         http("POST /api/boeken")
           .post("/api/boeken")
-          .body( StringBody( """{ "titel": "ik ben een geupdate titel${count}", "uitgever": "Ik ben de geupdate uitgever" }""")).asJson
+          .body( StringBody( """{ "titel": "ik ben een geupdate titel", "uitgever": "Ik ben de geupdate uitgever" }""")).asJson
+          .check(jsonPath("$.id").saveAs("BookId"))
       )
     }
+    .pause(1 seconds)
     .repeat(1 ) {
       exec(
         http("GET /api/boeken")
           .get("/api/boeken")
       )
     }
-    .repeat(2, "count"){
+    .pause(1 seconds)
+    .repeat(1){
       exec(
-        http("GET /api/boeken/")
-          .get("/api/boeken/${count}")
+        http("GET /api/boeken/id")
+          .get("/api/boeken/${BookId}")
+          .check(jsonPath("$.titel").is("ik ben een geupdate titel"))
       )
     }
-    .repeat(1){
+    .pause(1 seconds)
+    .repeat(5){
       exec(
         http("GET /getBookPdf")
           .get("/getBookPdf")
       )
     }
+    .pause(1 seconds)
     .repeat(1){
       exec(
-        http("POST /api/boeken")
-          .post("/api/boeken")
-          .body( StringBody( """{ "titel": "ik ben een geupdate titel", "uitgever": "Ik ben de geupdate uitgever" }""")).asJson
-      )
-    }
-    .pause(5 seconds)
-    .repeat(1){
-      exec(
-        http("DELETE /api/boeken/11")
-          .delete("/api/boeken/11")
-      )
-    }
-    .repeat(1){
-      exec(
-        http("PUT /api/boeken/4")
-          .put("/api/boeken/4")
+        http("PUT /api/boeken/id")
+          .put("/api/boeken/${BookId}")
           .body( StringBody( """{ "titel": "ik ben een geupdate titellll", "uitgever": "Ik ben de geupdate uitgeverrrr" }""")).asJson
+      )
+    }
+    .pause(1 seconds)
+    .repeat(1){
+      exec(
+        http("DELETE /api/boeken/id")
+          .delete("/api/boeken/${BookId}")
       )
     }
 
 
   setUp(
     scn.inject(
-
       nothingFor(4 seconds), // 1
       atOnceUsers(10), // 2
-      //rampUsers(10) during (5 seconds), // 3
-      //constantUsersPerSec(20) during (15 seconds), // 4
+      rampUsers(100) during (10 seconds), // 3
+      constantUsersPerSec(10) during (15 seconds), // 4
       //constantUsersPerSec(20) during (15 seconds) randomized, // 5
     ).protocols(httpProtocol))
 }
