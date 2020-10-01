@@ -44,7 +44,7 @@ class EndPointsTest {
         Long bookId1 = repository.findAll().get(repository.findAll().size()- 2).getId();
         Long bookId2 = repository.findAll().get(repository.findAll().size()- 1).getId();
 
-        get(URL + "/boeken")
+        get(URL + "/boeken/thread")
                 .then()
                 .assertThat()
                 .statusCode(200)

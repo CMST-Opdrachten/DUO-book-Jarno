@@ -4,10 +4,15 @@ import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.protocol.HttpProtocolBuilder
 import org.graalvm.compiler.hotspot.nodes.MonitorCounterNode.counter
+import org.junit.runner.RunWith
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.junit4.SpringRunner
 
 import scala.concurrent.duration._
 import scala.math.random
 import scala.util.Random
+
 
 class PerformanceTest extends Simulation {
 
@@ -24,14 +29,13 @@ class PerformanceTest extends Simulation {
           .check(jsonPath("$.id").saveAs("BookId"))
       )
     }
-    .pause(1 seconds)
+
     .repeat(1 ) {
       exec(
         http("GET /api/boeken")
           .get("/api/boeken")
       )
     }
-    .pause(1 seconds)
     .repeat(1){
       exec(
         http("GET /api/boeken/id")
@@ -39,14 +43,12 @@ class PerformanceTest extends Simulation {
           .check(jsonPath("$.titel").is("ik ben een geupdate titel"))
       )
     }
-    .pause(1 seconds)
-    .repeat(5){
+    .repeat(1){
       exec(
         http("GET /getBookPdf")
           .get("/getBookPdf")
       )
     }
-    .pause(1 seconds)
     .repeat(1){
       exec(
         http("PUT /api/boeken/id")
@@ -54,7 +56,7 @@ class PerformanceTest extends Simulation {
           .body( StringBody( """{ "titel": "ik ben een geupdate titellll", "uitgever": "Ik ben de geupdate uitgeverrrr" }""")).asJson
       )
     }
-    .pause(1 seconds)
+
     .repeat(1){
       exec(
         http("DELETE /api/boeken/id")
@@ -66,9 +68,9 @@ class PerformanceTest extends Simulation {
   setUp(
     scn.inject(
       nothingFor(4 seconds), // 1
-      atOnceUsers(10), // 2
-      rampUsers(100) during (10 seconds), // 3
+      atOnceUsers(1000), // 2
+      rampUsers(20) during (10 seconds), // 3
       constantUsersPerSec(10) during (15 seconds), // 4
-      //constantUsersPerSec(20) during (15 seconds) randomized, // 5
+      constantUsersPerSec(20) during (15 seconds) randomized, // 5
     ).protocols(httpProtocol))
 }

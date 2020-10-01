@@ -1,8 +1,8 @@
 package com.duo.book.controllers;
 
-import com.duo.book.BookNotFoundExceptoin;
 import com.duo.book.objects.Book;
 import com.duo.book.repositories.BookRepository;
+import com.duo.book.service.BookService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -20,57 +20,44 @@ import java.util.stream.Stream;
 @RestController
 public class BookController {
 
-    public BookRepository repository;
+    private final BookService service;
 
-    private static String filepath = "src\\pdfFiles\\";
-    private static String filename = "BooksPdf";
+    private static final String FILEPATH = "src\\pdfFiles\\";
+    private static final  String FILENAME = "BooksPdf";
 
-    BookController(BookRepository repository)
+    BookController(BookService service)
     {
-        this.repository = repository;
+        this.service = service;
     }
 
-    //get all books
-    @GetMapping("/api/boeken")
-    public List<Book> allBooks()
+    @GetMapping(value = "/api/boeken")
+    public List<Book> findAllBook()
     {
-        return repository.findAll();
+        return  service.findAllThread();
     }
 
-    //get single book by id
-    @GetMapping("/api/boeken/{id}")
-    public Book findBookByID(@PathVariable Long id)  {
-        return repository.findById(id).orElseThrow(() -> new BookNotFoundExceptoin(id));
+    @GetMapping(value = "/api/boeken/{id}")
+    public Book getAllBooks(@PathVariable Long id)
+    {
+        return  service.findBookThread(id);
     }
 
-    //add new book
     @PostMapping("/api/boeken")
-    public Book addBook(@RequestBody Book newBook)
+    public Book addBooks(@RequestBody Book newBook)
     {
-       return repository.save(newBook);
+        return service.addBookThread(newBook);
     }
 
-    //Update book by id
+    @DeleteMapping("/api/boeken/{id}")
+    public void deleteBooks(@PathVariable Long id)
+    {
+        service.deleteBookThread(id);
+    }
+
     @PutMapping("api/boeken/{id}")
-    public Book updateBook(@RequestBody Book newBook, @PathVariable Long id)
+    public Book putBooks(@RequestBody Book newBook, @PathVariable Long id)
     {
-        return repository.findById(id)
-                .map(book -> {
-                    book.setTitel(newBook.getTitel());
-                    book.setUitgever(newBook.getUitgever());
-                    return repository.save(book);
-                })
-                .orElseGet(() -> {
-                    newBook.setId(id);
-                    return repository.save(newBook);
-                });
-    }
-
-    //delete book with id
-    @DeleteMapping("api/boeken/{id}")
-    public void deleteBook(@PathVariable Long id)
-    {
-        repository.deleteById(id);
+        return service.putBookThread(id, newBook);
     }
 
     //Get all books and makes a pdf of the data in a table
@@ -79,13 +66,13 @@ public class BookController {
     {
         response.setContentType("application/pdf");
         String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename =" + filename+ ".pdf";
+        String headerValue = "attachment; filename =" + FILENAME+ ".pdf";
         response.setHeader(headerKey,headerValue);
 
         String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(filepath + filename+ "-" + timeStamp + ".pdf"));
+        PdfWriter.getInstance(document, new FileOutputStream(FILEPATH + FILENAME+ "-" + timeStamp + ".pdf"));
         PdfWriter.getInstance(document, response.getOutputStream());
         
         document.open();
@@ -114,12 +101,14 @@ public class BookController {
     //Adds the data to the table
     private void addRows(PdfPTable table)
     {
-        for(int i = 0; i < (repository.findAll().size()); i++  )
+        List<Book> books = service.findAllThread();
+        for (Book book : books)
         {
-            table.addCell(repository.findAll().get(i).getId().toString());
-            table.addCell(repository.findAll().get(i).getTitel());
-            table.addCell(repository.findAll().get(i).getUitgever());
+            table.addCell(book.getId().toString());
+            table.addCell(book.getTitel());
+            table.addCell(book.getUitgever());
         }
     }
+
 
 }

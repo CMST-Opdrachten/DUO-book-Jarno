@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class BookReceiver {
 
     @JmsListener(destination= "kast", containerFactory= "myFactory")
-    public void recieveMesasge(Book book)
+    public void recieveMessage(Book book)
     {
         System.out.println("Received <" + book.toString() + ">");
     }
