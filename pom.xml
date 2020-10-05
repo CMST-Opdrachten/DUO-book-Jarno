@@ -105,9 +105,9 @@
                 <version>3.4.1</version>
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://localhost:5432/Books</url>
+                    <url>jdbc:postgresql://192.168.99.100:5432/Books</url>
                     <username>postgres</username>
-                    <password>Welkom123</password>
+                    <password>postgres</password>
                     <changeLogFile>db/liquibase-changelog.xml</changeLogFile>
                 </configuration>
             </plugin><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><configuration><source>8</source><target>8</target></configuration></plugin>

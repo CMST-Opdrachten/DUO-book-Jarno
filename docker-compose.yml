@@ -1,21 +1,18 @@
-version: '3'
 
 services:
-  db:
-    image: "postgres"
+  app:
+    container_name: app-springboot-postgresql
+    image: app-springboot-postgresql
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - dbpostgresql
+  dbpostgresql:
+    image: postgres
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: Books
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Welkom123
-  app:
-    build: ./src
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/Books
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: Welkom123
-    depends_on:
-      - db
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=Books
