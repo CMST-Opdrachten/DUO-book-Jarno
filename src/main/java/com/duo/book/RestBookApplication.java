@@ -2,6 +2,7 @@ package com.duo.book;
 
 import com.duo.book.objects.Book;
 import com.duo.book.repositories.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,12 +24,12 @@ import java.util.List;
 @EnableJms
 public class RestBookApplication
 {
-
     private static BookRepository repository;
+
 
     RestBookApplication(BookRepository repository)
     {
-        this.repository = repository;
+        RestBookApplication.repository = repository;
     }
 
     public static void main(String[] args)

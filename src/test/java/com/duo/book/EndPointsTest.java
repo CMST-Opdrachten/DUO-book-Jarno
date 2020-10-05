@@ -2,6 +2,7 @@ package com.duo.book;
 
 import com.duo.book.objects.Book;
 import com.duo.book.repositories.BookRepository;
+import com.duo.book.service.BookService;
 import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
 
@@ -26,29 +27,29 @@ import static org.hamcrest.CoreMatchers.is;
 class EndPointsTest {
 
     @Autowired
-    private BookRepository repository;
+    private BookService service;
 
-    private static String URL = "http://localhost:8080/api";
+    private static final String URL = "http://localhost:8080/api";
 
     @BeforeEach
-    public void addTestData()
+    void addTestData()
     {
-        repository.deleteAll();
-        repository.save(new Book("test1", "uitgever"));
-        repository.save(new Book("test2", "uitgever"));
+        service.deleteAllThread();
+        service.addBookThread(new Book("test1", "uitgever"));
+        service.addBookThread(new Book("test2", "uitgever"));
     }
 
     @Test
-    public void getResponses() {
+    void getResponses() {
 
-        Long bookId1 = repository.findAll().get(repository.findAll().size()- 2).getId();
-        Long bookId2 = repository.findAll().get(repository.findAll().size()- 1).getId();
+        Long bookId1 = service.findAllThread().get(service.findAllThread().size()- 2).getId();
+        Long bookId2 = service.findAllThread().get(service.findAllThread().size()- 1).getId();
 
-        get(URL + "/boeken/thread")
+        get(URL + "/boeken")
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .body("size()", is(repository.findAll().size()));
+                .body("size()", is(service.findAllThread().size()));
 
         get(URL+ "/boeken/" + bookId1)
                 .then()
@@ -67,7 +68,7 @@ class EndPointsTest {
     }
 
     @Test
-    public void postResponses()
+    void postResponses()
     {
         String json = "{ \"titel\": \"ik ben een titel\", \"uitgever\": \"Ik ben de uitgever\" }";
 
@@ -82,7 +83,7 @@ class EndPointsTest {
                 .extract()
                 .response();
 
-        Long bookId = repository.findAll().get(repository.findAll().size() - 1).getId();
+        Long bookId = service.findAllThread().get(service.findAllThread().size() - 1).getId();
 
         get(URL + "/boeken/" + bookId)
                 .then()
@@ -93,11 +94,11 @@ class EndPointsTest {
 
     }
     @Test
-    public void updateResponse()
+    void updateResponse()
     {
         String json = "{ \"titel\": \"ik ben een geupdate titel\", \"uitgever\": \"Ik ben de geupdate uitgever\" }";
 
-        Long bookId = repository.findAll().get(repository.findAll().size() - 1).getId();
+        Long bookId = service.findAllThread().get(service.findAllThread().size() - 1).getId();
         given()
                 .contentType(ContentType.JSON)
                 .body(json)
@@ -117,9 +118,9 @@ class EndPointsTest {
     }
 
     @Test
-    public void deleteRessponse()
+    void deleteRessponse()
     {
-        Long bookId = repository.findAll().get(repository.findAll().size() - 1).getId();
+        Long bookId = service.findAllThread().get(service.findAllThread().size() - 1).getId();
         delete(URL + "/boeken/" + bookId)
                 .then()
                 .assertThat()

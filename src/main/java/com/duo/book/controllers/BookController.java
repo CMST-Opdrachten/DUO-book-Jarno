@@ -1,7 +1,6 @@
 package com.duo.book.controllers;
 
 import com.duo.book.objects.Book;
-import com.duo.book.repositories.BookRepository;
 import com.duo.book.service.BookService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;

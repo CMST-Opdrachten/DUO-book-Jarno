@@ -42,6 +42,12 @@ public class BookService {
     }
 
     @Async
+    public void deleteAllThread()
+    {
+        repository.deleteAll();
+    }
+
+    @Async
     public Book putBookThread(Long id, Book newBook)
     {
         return repository.findById(id)
