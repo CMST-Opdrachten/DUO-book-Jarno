@@ -1,18 +1,25 @@
-
-services:
-  app:
-    container_name: app-springboot-postgresql
-    image: app-springboot-postgresql
-    build: ./
-    ports:
-      - "8080:8080"
-    depends_on:
-      - dbpostgresql
-  dbpostgresql:
-    image: postgres
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=Books
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: load-book-api
+  name: book
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: load-book-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: load-book-api
+    spec:
+      containers:
+        - image: springio/book:latest
+          name: book
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BOOK_PORT
+              value: "8080"
