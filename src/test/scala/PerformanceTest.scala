@@ -17,7 +17,7 @@ import scala.util.Random
 class PerformanceTest extends Simulation {
 
   val httpProtocol: HttpProtocolBuilder = http
-    .baseUrl("http://localhost:8080")
+    .baseUrl("http://192.168.99.100:31722")
 
   val scn: ScenarioBuilder = scenario("PerformanceSimulation")
     .repeat(1, "count")
@@ -68,9 +68,9 @@ class PerformanceTest extends Simulation {
   setUp(
     scn.inject(
       nothingFor(4 seconds), // 1
-      atOnceUsers(1000), // 2
-      rampUsers(20) during (10 seconds), // 3
-      constantUsersPerSec(10) during (15 seconds), // 4
-      constantUsersPerSec(20) during (15 seconds) randomized, // 5
+      //atOnceUsers(500), // 2
+      rampUsers(1000) during (60 seconds), // 3
+      //constantUsersPerSec(10) during (15 seconds), // 4
+      //constantUsersPerSec(20) during (15 seconds) randomized, // 5
     ).protocols(httpProtocol))
 }

@@ -17,7 +17,7 @@ spec:
       containers:
         - image: springio/book:latest
           name: book
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
