@@ -106,18 +106,7 @@
                 <configuration>
                     <changeLogFile>src/main/resources/db/liquibase-changelog.xml</changeLogFile>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://192.168.99.101:5432/Books</url>
-                    <username>postgres</username>
-                    <password>postgres</password>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>update</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
